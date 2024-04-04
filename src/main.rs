@@ -1,6 +1,7 @@
 use std::num::NonZeroU32;
 
-use clap::{CommandFactory, ErrorKind, Parser};
+use clap::error::ErrorKind;
+use clap::{CommandFactory, Parser};
 use rand::thread_rng;
 
 use crate::calendar::{non_holidays_of_month, Month, Year};
@@ -13,10 +14,10 @@ mod generate;
 #[clap(author, version, about, long_about = None)]
 struct Arguments {
     /// The month
-    #[clap(parse(try_from_str = month_in_range))]
+    #[clap(value_parser  = month_in_range)]
     month: NonZeroU32,
     /// The year
-    #[clap(parse(try_from_str = year_in_range))]
+    #[clap(value_parser = year_in_range)]
     year: u32,
     /// Hours to assign
     hours: NonZeroU32,
@@ -26,13 +27,13 @@ struct Arguments {
     csv: bool,
 
     /// Maximum assignable hours per day
-    #[clap(parse(try_from_str = hour_in_range), default_value_t = 8)]
+    #[clap(value_parser = hour_in_range, default_value_t = 8)]
     max_per_day: u32,
     /// Earliest assignable starting hour
-    #[clap(parse(try_from_str = hour_in_range), default_value_t = 8)]
+    #[clap(value_parser = hour_in_range, default_value_t = 8)]
     earliest: u32,
     /// Latest assignable stopping hour
-    #[clap(parse(try_from_str = hour_in_range), default_value_t = 20)]
+    #[clap(value_parser = hour_in_range, default_value_t = 20)]
     latest: u32,
 }
 
